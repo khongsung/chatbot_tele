@@ -23,7 +23,7 @@
 		"Nhiệt độ" => 40
 	);
 
-	// file_get_contents($path."/sendmessage?chat_id=". $groupSKID ."&text=Chào a sung");
+	// file_get_contents($path."/sendmessage?chat_id=".$groupSKID."&text=Chào a sung");
 	// die();
 
 	date_default_timezone_set("Asia/Ho_Chi_Minh");
@@ -59,15 +59,27 @@
 	        break;
 	    exit;
 	}
-
-
+	
 	if (isset($_GET['test'])) {
-		file_get_contents($path."/sendmessage?chat_id=". $chatId ."&text=Chào " .  $_GET["test"]);
+		file_get_contents($path."/sendmessage?chat_id=".$groupSKID."&text=Chào ".$_GET["test"]);
 	}
+
+/*check disconnect*/
+	$isDisconnected = "";
 	if(isset($_REQUEST["isDisconnected"])) {
-		file_put_contents('files/disconnected.txt','disconnected',FILE_APPEND);
-		file_get_contents($path."/sendmessage?chat_id=". $chatId ."&text=Disconnected");
+		$isDisconnected = "Disconnected";
 	}
+
+	if ($isDisconnected == "") {
+		file_put_contents('files/disconnected.txt','');
+	}
+
+	if ($isDisconnected != "" && file_get_contents('files/disconnected.txt') == "") {
+		file_get_contents($path."/sendmessage?chat_id=". $groupSKID ."&text=Disconnected");
+		file_put_contents("files/disconnected.txt","disconnected");
+	}
+/*end check disconect*/
+
 	if (isset($_REQUEST["llHienTai"])) {
 		echo "ghi file luu luong";
 		
@@ -87,7 +99,8 @@
 			
 		}
 	}
-	//binDataSensor($path);
+
+
 	function bindDataSensor($path){
 		// convert array to string and concat them
 		$sensorName = explode("-", $_REQUEST["sensorName"]);
@@ -99,7 +112,7 @@
 		$sensorHigher = "";
 		$TPerr = "";
 		
-
+		/*create array text sensors value and send to tele */
 		foreach ($sensorName as $key => $value) {
 			$html .= $value . "=". $sensorValues[$key] . "\n";
 
