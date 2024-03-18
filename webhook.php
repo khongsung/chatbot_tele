@@ -57,6 +57,13 @@
         	}
 	        file_get_contents($path."/sendmessage?chat_id=".$chatId."&parse_mode=HTML&text=".$txtWarning);
 	        break;
+        case '/connect':
+        	$txtCnn = file_get_contents('files/disconnected.txt');
+        	if ($txtCnn == "") {
+        		$txtCnn = "System Online!";
+        	}
+	        file_get_contents($path."/sendmessage?chat_id=".$chatId."&parse_mode=HTML&text=".$txtCnn);
+	        break;
 	    exit;
 	}
 
